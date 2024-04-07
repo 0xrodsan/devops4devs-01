@@ -13,6 +13,7 @@ jobs:
       - name: "Push the Image to the Docker Hub"
         run: echo "Docker push"
   CD:
+   needs: [CI]
    runs-on: ubuntu-latest
    steps:
      - name: K8s connect
