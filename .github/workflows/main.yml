@@ -34,8 +34,8 @@ jobs:
        uses: aws-actions/configure-aws-credentials@v4
        with:
          asw-region: "us-east-1"
-         aws-access-key-id: ${{secret.AWS_ACCESS_KEY}}
-         aws-secret-access-key: ${{secret.AWS_ACCESS_SECRET}}        
+         aws-access-key-id: ${{ secret.AWS_ACCESS_KEY }}
+         aws-secret-access-key: ${{ secret.AWS_ACCESS_SECRET }}        
      - name: K8s Settings
        run: aws eks update-kubeconfig --name devops4devs-eks --region us-east-1
      - name: Manifest update-auth
