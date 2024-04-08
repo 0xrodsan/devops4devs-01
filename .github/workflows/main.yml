@@ -21,21 +21,38 @@ jobs:
           context: ./src
           file: ./src/Dockerfile
           push: true
-          tags: 
+          tags: |
             rodsan/devops4devs-news:latest
             rodsan/devops4devs-news:${{github.run_number}}
   CD:
    needs: [CI]
    runs-on: ubuntu-latest
    steps:
+     - uses: actions/checkout@v4.1.2
+       name: Repository Checkout
      - name: AWS Settings
        uses: aws-actions/configure-aws-credentials@v4
        with:
          asw-region: "us-east-1"
          aws-access-key-id: ${{secre.AWS_ACCESS_KEY}}
-         aws-secret-access-key: ${{secre.AWS_ACCESS_SECRET}}
+         aws-secret-access-key: ${{secre.AWS_ACCESS_SECRET}}        
+     - name: K8s Settings
+       run: aws eks update-kubeconfig --name devops4devs-eks --region us-east-1
+     - name: Manifest update-auth
+       shell: bash
+       run: |
+         sed -i "s/{{AWS_ACCESS_KEY}}/${{ secrets.AWS_ACCESS_KEY }}/g" ./k8s/deploy.yaml
+         sed -i "s/{{AWS_ACCESS_SECRET}}/${{ secrets.AWS_ACCESS_SECRET }}/g" ./k8s/deploy.yaml
+     - name: K8s deploy
+       uses: Azure/k8s-deploy@4.9
+       with:
+         manifests: |
+           ./k8s/deploy.yaml
+         images: |
+            rodsan/devops4devs-news:${{github.run_number}}
         
-     - name: Deploy
-       run: echo "kubectl apply"
+           
+       
+       
      
   
