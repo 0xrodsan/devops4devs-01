@@ -28,8 +28,13 @@ jobs:
    needs: [CI]
    runs-on: ubuntu-latest
    steps:
-     - name: K8s connect
-       run: echo "Kubeconfig settings"
+     - name: AWS Settings
+       uses: aws-actions/configure-aws-credentials@v4
+       with:
+         asw-region: "us-east-1"
+         aws-access-key-id: ${{secre.AWS_ACCESS_KEY}}
+         aws-secret-access-key: ${{secre.AWS_ACCESS_SECRET}}
+        
      - name: Deploy
        run: echo "kubectl apply"
      
